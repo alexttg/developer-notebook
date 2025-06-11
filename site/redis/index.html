@@ -1,0 +1,1027 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A blog about my favorite things">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../%E8%BE%93%E5%87%BAchatgtp%E8%BF%94%E5%9B%9E%E5%86%85%E5%AE%B9/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>Lua如何在Redis Run - Tanzhuo Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#redislua" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Tanzhuo Blog" class="md-header__button md-logo" aria-label="Tanzhuo Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tanzhuo Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lua如何在Redis Run
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Tanzhuo Blog" class="md-nav__button md-logo" aria-label="Tanzhuo Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Tanzhuo Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        关于我
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Lua如何在Redis Run
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Lua如何在Redis Run
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#redis" class="md-nav__link">
+    在Redis中基本用法
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#luaredis" class="md-nav__link">
+    Lua操作Redis基本数据结构
+  </a>
+  
+    <nav class="md-nav" aria-label="Lua操作Redis基本数据结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#luastring" class="md-nav__link">
+    Lua操作String
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#luamap" class="md-nav__link">
+    Lua操作Map
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lualist" class="md-nav__link">
+    Lua操作List
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#luaset" class="md-nav__link">
+    Lua操作Set
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#luasorted-set" class="md-nav__link">
+    Lua操作Sorted Set
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#luaredis_1" class="md-nav__link">
+    Lua操作Redis特殊数据结构
+  </a>
+  
+    <nav class="md-nav" aria-label="Lua操作Redis特殊数据结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#luageo" class="md-nav__link">
+    Lua操作Geo （计算上海到广州的直线距离）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#luabitmapredis" class="md-nav__link">
+    Lua操作Bitmap（修改Redis值内存偏移量）
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lua" class="md-nav__link">
+    Lua实现分布式锁
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#springlua" class="md-nav__link">
+    在Spring中运行Lua
+  </a>
+  
+    <nav class="md-nav" aria-label="在Spring中运行Lua">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maven" class="md-nav__link">
+    引入maven依赖
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redistemplatespring" class="md-nav__link">
+    初始化RedisTemplate至Spring容器
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redistemplatelua" class="md-nav__link">
+    使用RedisTemplate运行Lua
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lua_1" class="md-nav__link">
+    在代码中运行上述Lua脚本
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E8%BE%93%E5%87%BAchatgtp%E8%BF%94%E5%9B%9E%E5%86%85%E5%AE%B9/" class="md-nav__link">
+        如何利用streamlit构建属于你的ChatGTP
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mac%E5%AE%89%E8%A3%85GraphicsMagick/" class="md-nav__link">
+        GraphicsMagick使用教程
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%BA%BF%E4%B8%8AMySql/" class="md-nav__link">
+        如何利用线上MySql binlog排查问题
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Centos%E5%AE%89%E8%A3%85python3.8/" class="md-nav__link">
+        Centos安装python3.8运行环境
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CPU/" class="md-nav__link">
+        服务器CPU满载排查
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%86%85%E5%AD%98%E5%8F%AF%E8%A7%81%E6%80%A7/" class="md-nav__link">
+        内存可见性
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mybatis-Plus/" class="md-nav__link">
+        Mybatis-Plus
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E4%BD%BF%E7%94%A8minikube%E5%AE%89%E8%A3%85Kubernetes/" class="md-nav__link">
+        使用minikube安装Kubernetes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="md-nav__link">
+        指令重排
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arthas/" class="md-nav__link">
+        Arthas安装与使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arthas%E6%8F%92%E4%BB%B6/" class="md-nav__link">
+        Arthas实际开发中使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Elasticsearch%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" class="md-nav__link">
+        Elasticsearch 基本使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana%20%E4%BD%BF%E7%94%A8%20Elasticsearch%20%E4%BD%9C%E4%B8%BA%E6%95%B0%E6%8D%AE%E6%BA%90/" class="md-nav__link">
+        Grafana 使用 Elasticsearch 作为数据源
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../JAVA%E6%96%87%E4%BB%B6%E8%A7%A3%E5%8E%8B%E6%96%B9%E5%BC%8F%E6%95%88%E7%8E%87%E5%AF%B9%E6%AF%94/" class="md-nav__link">
+        JAVA文件解压方式效率对比
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kubernetes%E4%BD%BF%E7%94%A8Arthas/" class="md-nav__link">
+        Kubernetes使用Arthas
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MESI%E5%8D%8F%E8%AE%AE%E4%B8%8EMOESI%E5%8D%8F%E8%AE%AE/" class="md-nav__link">
+        MESI协议与MOESI协议
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nacos/" class="md-nav__link">
+        将Nacos加入到你的项目
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synchronized%E5%85%B3%E9%94%AE%E5%AD%97/" class="md-nav__link">
+        synchronized关键字
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#redis" class="md-nav__link">
+    在Redis中基本用法
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#luaredis" class="md-nav__link">
+    Lua操作Redis基本数据结构
+  </a>
+  
+    <nav class="md-nav" aria-label="Lua操作Redis基本数据结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#luastring" class="md-nav__link">
+    Lua操作String
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#luamap" class="md-nav__link">
+    Lua操作Map
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lualist" class="md-nav__link">
+    Lua操作List
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#luaset" class="md-nav__link">
+    Lua操作Set
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#luasorted-set" class="md-nav__link">
+    Lua操作Sorted Set
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#luaredis_1" class="md-nav__link">
+    Lua操作Redis特殊数据结构
+  </a>
+  
+    <nav class="md-nav" aria-label="Lua操作Redis特殊数据结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#luageo" class="md-nav__link">
+    Lua操作Geo （计算上海到广州的直线距离）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#luabitmapredis" class="md-nav__link">
+    Lua操作Bitmap（修改Redis值内存偏移量）
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lua" class="md-nav__link">
+    Lua实现分布式锁
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#springlua" class="md-nav__link">
+    在Spring中运行Lua
+  </a>
+  
+    <nav class="md-nav" aria-label="在Spring中运行Lua">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maven" class="md-nav__link">
+    引入maven依赖
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redistemplatespring" class="md-nav__link">
+    初始化RedisTemplate至Spring容器
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redistemplatelua" class="md-nav__link">
+    使用RedisTemplate运行Lua
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lua_1" class="md-nav__link">
+    在代码中运行上述Lua脚本
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="redislua">Redis运行Lua脚本<a class="headerlink" href="#redislua" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>在一些互联网项目中，难免会设计到一些原子性操作，例如实时交易量的累加，分布式锁的实现，那么采用lua脚本可以帮助我们完成一个原子性的操作</p>
+</blockquote>
+<p>Redis会使用相同的 Lua 解释器来运行所有命令。Redis 还保证以原子方式执行脚本：在执行脚本时不会执行其他脚本或 Redis 命令。</p>
+<p>使用Lua脚本的好处有</p>
+<p>● 避免多次网络IO请求，当业务场景需要多次操作Redis时可以封装Lua脚本，减少网络开销</p>
+<p>● 多指令原子化，Redis使用独特的解释器将多个操作指令封装成同一指令执行</p>
+<h3 id="redis">在Redis中基本用法<a class="headerlink" href="#redis" title="Permanent link">&para;</a></h3>
+<pre><code>EVAL script numkeys key [key ...] arg [arg ...]
+</code></pre>
+<p>例</p>
+<pre><code>EVAL "return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}" 2 key1 key2 value1 value2
+</code></pre>
+<p>参数说明：</p>
+<ol>
+<li>
+<p><code>EVAL</code> ：Lua执行关键字</p>
+</li>
+<li>
+<p><code>KEYS[1]</code>：传入key数组中第一个元素也就是“key1”</p>
+</li>
+<li><code>KEYS[2]</code>：传入key数组中第二个元素也就是“key2”</li>
+<li><code>ARGV[1]</code>：传入argv数组中第一个元素也就是“value1”</li>
+<li><code>ARGV[2]</code>：传入argv数组中第二个元素也就是“value2”</li>
+<li>最后的参数 2 为 key值数组的长度</li>
+</ol>
+<p><img alt="" src="https://foruda.gitee.com/images/1685612099841323833/945651be_5094274.png" /></p>
+<h3 id="luaredis">Lua操作Redis基本数据结构<a class="headerlink" href="#luaredis" title="Permanent link">&para;</a></h3>
+<h4 id="luastring">Lua操作String<a class="headerlink" href="#luastring" title="Permanent link">&para;</a></h4>
+<p>存</p>
+<pre><code>EVAL "redis.call('SET',KEYS[1],ARGV[1])" 1 stringinser 123
+</code></pre>
+<p>取</p>
+<pre><code>EVAL "return redis.call('GET',KEYS[1])" 1 stringinser
+</code></pre>
+<h4 id="luamap">Lua操作Map<a class="headerlink" href="#luamap" title="Permanent link">&para;</a></h4>
+<p>存</p>
+<pre><code>EVAL "redis.call('HSET',ARGV[1],KEYS[1],ARGV[2])" 1 mapinsert test 123
+</code></pre>
+<p>取</p>
+<pre><code>EVAL "return redis.call('HGET',ARGV[1],KEYS[1])" 1 mapinsert test
+</code></pre>
+<h4 id="lualist">Lua操作List<a class="headerlink" href="#lualist" title="Permanent link">&para;</a></h4>
+<p>存</p>
+<pre><code>EVAL "redis.call('LPUSH',KEYS[1],ARGV[1])" 1 listinsert 123
+</code></pre>
+<p>取</p>
+<pre><code>EVAL "return redis.call('LRANGE',KEYS[1],0,-1)" 1 listinsert
+</code></pre>
+<h4 id="luaset">Lua操作Set<a class="headerlink" href="#luaset" title="Permanent link">&para;</a></h4>
+<p>存</p>
+<pre><code>EVAL "redis.call('SADD',KEYS[1],ARGV[1])" 1 setinsert 123
+</code></pre>
+<p>取</p>
+<pre><code>EVAL "return redis.call('SMEMBERS',KEYS[1])" 1 setinsert
+</code></pre>
+<h4 id="luasorted-set">Lua操作Sorted Set<a class="headerlink" href="#luasorted-set" title="Permanent link">&para;</a></h4>
+<p>存</p>
+<pre><code>EVAL "redis.call('ZADD',KEYS[1],ARGV[1],ARGV[2])" 1 zsetinsert 0 123
+</code></pre>
+<p>取</p>
+<pre><code>EVAL "return redis.call('ZRANGE',KEYS[1],0,-1)" 1 zsetinsert
+</code></pre>
+<h3 id="luaredis_1">Lua操作Redis特殊数据结构<a class="headerlink" href="#luaredis_1" title="Permanent link">&para;</a></h3>
+<h4 id="luageo">Lua操作Geo （计算上海到广州的直线距离）<a class="headerlink" href="#luageo" title="Permanent link">&para;</a></h4>
+<p>存</p>
+<pre><code>EVAL "return redis.call('GEOADD',KEYS[1],ARGV[1],ARGV[2],ARGV[3],ARGV[4],ARGV[5],ARGV[6])" 1 drawing 121.472644 31.231706 Shanghai 113.280637 23.125178 Guangzhou
+</code></pre>
+<p>取</p>
+<pre><code>EVAL "return redis.call('GEODIST',KEYS[1],ARGV[1],ARGV[2])" 1 drawing Shanghai Guangzhou
+</code></pre>
+<h4 id="luabitmapredis">Lua操作Bitmap（修改Redis值内存偏移量）<a class="headerlink" href="#luabitmapredis" title="Permanent link">&para;</a></h4>
+<pre><code>set bigtmap_a  a
+EVAL &quot;redis.call('SETBIT',KEYS[1],ARGV[1],ARGV[2]) redis.call('SETBIT',KEYS[1],ARGV[3],ARGV[4]) &quot; 1 bigtmap_a 6 1 7 0
+get bigtmap_a
+</code></pre>
+<p>Lua操作HyperLogLog（统计站点uv）
+将访问页面货接口的每个用户信息添加到 HyperLogLog 中。</p>
+<pre><code>EVAL "redis.call('PFADD',KEYS[1],ARGV[1]) redis.call('PFADD',KEYS[1],ARGV[2]) redis.call('PFADD',KEYS[1],ARGV[3]) " 1 uv user1 user2  user1
+</code></pre>
+<p>统计日活</p>
+<pre><code>EVAL "return redis.call('PFCOUNT',KEYS[1]) " 1 uv
+</code></pre>
+<h3 id="lua">Lua实现分布式锁<a class="headerlink" href="#lua" title="Permanent link">&para;</a></h3>
+<p>lock</p>
+<pre><code>EVAL "local key=KEYS[1] local value = ARGV[1] if redis.call('SETNX',key,value) &gt;0 then redis.call('SETEX', key,ARGV[2], value) return 0 end  return 1" 1 lock uid123 60
+</code></pre>
+<p>unlock</p>
+<pre><code>EVAL "if redis.call('GET',KEYS[1]) ==ARGV[1] then redis.call('DEL', KEYS[1]) return 0 end return 1" 1 lock uid123
+</code></pre>
+<h2 id="springlua">在Spring中运行Lua<a class="headerlink" href="#springlua" title="Permanent link">&para;</a></h2>
+<p>在实际开发中一般会使用Jedis或RedisTemplate等Redis的Java客户端库配合 <code>EVALSHA</code>命令运行Lua，不会使用<code>EVAL</code>，后面会说它们详细区别</p>
+<h4 id="maven">引入maven依赖<a class="headerlink" href="#maven" title="Permanent link">&para;</a></h4>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+    &lt;artifactId&gt;fastjson&lt;/artifactId&gt;
+    &lt;version&gt;2.0.7&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h4 id="redistemplatespring">初始化RedisTemplate至Spring容器<a class="headerlink" href="#redistemplatespring" title="Permanent link">&para;</a></h4>
+<pre><code>@Bean
+public RedisTemplate&lt;String, Object&gt; redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    RedisTemplate&lt;String, Object&gt; template = new RedisTemplate&lt;&gt;();
+    //使用fastjson作为序列化方式
+    FastJsonRedisSerializer&lt;Object&gt; serializer = new FastJsonRedisSerializer&lt;&gt;(Object.class);
+    //设置hash类型序列化方式
+    template.setHashKeySerializer(new StringRedisSerializer());
+    template.setHashValueSerializer(serializer);
+    //设置string 序列化方式
+    template.setKeySerializer(new StringRedisSerializer());
+    template.setValueSerializer(serializer);
+    template.setConnectionFactory(redisConnectionFactory);
+    return template;
+    }
+</code></pre>
+<h4 id="redistemplatelua">使用RedisTemplate运行Lua<a class="headerlink" href="#redistemplatelua" title="Permanent link">&para;</a></h4>
+<p>RedisTemplate 做的事情主要是封装了Redis执行Lua的原生指令，为以下两种</p>
+<pre><code>EVALSHA sha1 numkeys [key [key ...]] [arg [arg ...]]
+EVAL script numkeys [key [key ...]] [arg [arg ...]]
+
+</code></pre>
+<p><strong>EVALSHA 与 EVAL 的区别是前者会将Lua脚本缓存至Reids内存中并返回一串sha1值，下次执行相同命令时，便会通过相同的sha1值找到对应命令执行（若脚本改变了一个字符这sha1值也会改变）</strong></p>
+<p>编写Lua脚本</p>
+<blockquote>
+<p>第一次执行<code>EVALSHA</code>命令后将脚本缓存会返回一串与之对应的sha1值</p>
+</blockquote>
+<pre><code>#以下为分布式锁加锁
+local key = KEYS[1] 
+local value = ARGV[1]
+local time = ARGV[2]
+if redis.call('SETNX', key, value) &gt; 0
+  then
+  redis.call('SETEX', key, time, value)
+  return 0
+end
+return 1
+</code></pre>
+<p>例：</p>
+<p><code>3ac9e3871efe141e7b889378431957fc0a9878f8</code>  为sha1值</p>
+<p><strong>运行以下命令</strong>：</p>
+<pre><code>EVALSHA 3ac9e3871efe141e7b889378431957fc0a9878f8  1 demo_key 1 60
+</code></pre>
+<p>运行以上命令相当于运行上面的Lua脚本</p>
+<p>运行结果</p>
+<p><img alt="图片" src="https://foruda.gitee.com/images/1685612138649308888/574d76c6_5094274.png" /></p>
+<h4 id="lua_1">在代码中运行上述Lua脚本<a class="headerlink" href="#lua_1" title="Permanent link">&para;</a></h4>
+<pre><code> /**
+     * 使用类加载器获取lua脚本
+     */
+    private final ClassPathResource classPathResource = new ClassPathResource(&quot;lua/lock.lua&quot;);
+
+    public void synchronizedByLua(String key, long value, long time) {
+        RedisScript&lt;Long&gt; redisScript = RedisScript.of(classPathResource, Long.class);
+        //sha1
+        String sha1 = redisScript.getSha1();
+        System.out.println(sha1);
+        //执行Lua
+        Long execute = redisTemplate.execute(redisScript, Lists.newArrayList(key), value, time);
+
+        System.out.println(execute);
+    }
+
+</code></pre>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,27 @@
+site_name: Tanzhuo Blog
+site_description: A blog about my favorite things
+nav:
+    - 关于我: index.md
+    - Lua如何在Redis Run: redis.md
+    - 如何利用streamlit构建属于你的ChatGTP: 输出chatgtp返回内容.md
+    - GraphicsMagick使用教程: mac安装GraphicsMagick.md
+    - 如何利用线上MySql binlog排查问题: 线上MySql.md
+    - Centos安装python3.8运行环境: Centos安装python3.8.md
+    - 服务器CPU满载排查: CPU.md
+    - 内存可见性: 内存可见性.md
+    - Mybatis-Plus: Mybatis-Plus.md
+    - 使用minikube安装Kubernetes: 使用minikube安装Kubernetes.md
+    - 指令重排:  指令重排.md
+    - Arthas安装与使用 : Arthas.md
+    - Arthas实际开发中使用 : Arthas插件.md
+    - Elasticsearch 基本使用 : Elasticsearch 基本使用.md
+    - Grafana 使用 Elasticsearch 作为数据源: Grafana 使用 Elasticsearch 作为数据源.md
+    - JAVA文件解压方式效率对比 : JAVA文件解压方式效率对比.md
+    - Kubernetes使用Arthas : Kubernetes使用Arthas.md 
+    - MESI协议与MOESI协议 : MESI协议与MOESI协议.md 
+    - 将Nacos加入到你的项目: nacos.md
+    - synchronized关键字: synchronized关键字.md
+markdown_extensions:
+  - toc:
+      permalink: true
+theme: material

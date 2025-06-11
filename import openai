@@ -1,0 +1,51 @@
+import openai
+import streamlit as st
+
+# 设置 Streamlit 的页面标题和图标
+st.set_page_config(page_title="OpenAI 问答机器人", page_icon=":robot_face:")
+
+# 设置应用的标题和子标题
+st.title("OpenAI 问答机器人 :robot_face:")
+st.subheader("使用 OpenAI API 进行智能问答！😄")
+
+# 使用单选按钮询问用户是否拥有 OpenAI API 的密钥
+has_key = st.radio(label="您是否拥有任何 OpenAI API 密钥？", options=["没有", "有"])
+
+if has_key == "有":
+    # 创建 OpenAI API 密钥的输入框
+    openai_key = st.text_input("请输入您的 OpenAI API 密钥:", key="openai_key")
+    # 设置 OpenAI API 密钥
+    openai.api_key = openai_key
+else:
+    # 设置默认的 OpenAI API 密钥
+    openai.api_key = "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"
+
+# 创建用户问题的输入框
+user_input = st.text_input("请输入您的问题:", key="input")
+
+# 如果用户单击“询问”按钮，则生成并显示答案
+if st.button("询问", key="ask_button"):
+    st.markdown("---")
+    res_box = st.empty()
+    report = []
+    # 循环响应
+    for completions in openai.Completion.create(model='text-davinci-003',
+                                               prompt=user_input,
+                                               max_tokens=4000,
+                                               temperature=0.5,
+                                               stream=True):
+        report.append(completions.choices[0].text)
+        res_box.markdown(f'{"".join(report).strip()}')
+    st.markdown("---")
+
+# 添加关于信息以及到 OpenAI API 文档的链接
+st.subheader("关于")
+st.write("本应用程序使用 OpenAI API 生成用户问题的答案。")
+st.write("更多信息，详见 [OpenAI API 文档](https://beta.openai.com/docs/api-reference) 。")
+
+# 添加页脚信息
+st.markdown("---")
+st.write("由 klsjun 创作", "https://github.com/klsjun")
+
+
+帮我把上面的代码风格和样式变化一下，变得更加好看和完善，最好和以前有很大的区别，但是功能和使用上没有什么区别

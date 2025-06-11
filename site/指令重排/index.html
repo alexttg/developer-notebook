@@ -1,0 +1,794 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A blog about my favorite things">
+      
+      
+      
+      
+        <link rel="prev" href="../%E4%BD%BF%E7%94%A8minikube%E5%AE%89%E8%A3%85Kubernetes/">
+      
+      
+        <link rel="next" href="../Arthas/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>指令重排 - Tanzhuo Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#happens-before" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Tanzhuo Blog" class="md-header__button md-logo" aria-label="Tanzhuo Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tanzhuo Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              指令重排
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Tanzhuo Blog" class="md-nav__button md-logo" aria-label="Tanzhuo Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Tanzhuo Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        关于我
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        Lua如何在Redis Run
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E8%BE%93%E5%87%BAchatgtp%E8%BF%94%E5%9B%9E%E5%86%85%E5%AE%B9/" class="md-nav__link">
+        如何利用streamlit构建属于你的ChatGTP
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mac%E5%AE%89%E8%A3%85GraphicsMagick/" class="md-nav__link">
+        GraphicsMagick使用教程
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%BA%BF%E4%B8%8AMySql/" class="md-nav__link">
+        如何利用线上MySql binlog排查问题
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Centos%E5%AE%89%E8%A3%85python3.8/" class="md-nav__link">
+        Centos安装python3.8运行环境
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CPU/" class="md-nav__link">
+        服务器CPU满载排查
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%86%85%E5%AD%98%E5%8F%AF%E8%A7%81%E6%80%A7/" class="md-nav__link">
+        内存可见性
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mybatis-Plus/" class="md-nav__link">
+        Mybatis-Plus
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E4%BD%BF%E7%94%A8minikube%E5%AE%89%E8%A3%85Kubernetes/" class="md-nav__link">
+        使用minikube安装Kubernetes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          指令重排
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        指令重排
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#happens-before" class="md-nav__link">
+    指令重排与Happens-Before
+  </a>
+  
+    <nav class="md-nav" aria-label="指令重排与Happens-Before">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    编译器的优化
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    指令重排有以下规则
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#happens-before_1" class="md-nav__link">
+    Happens-Before规则
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cpu" class="md-nav__link">
+    cpu与操作系统
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arthas/" class="md-nav__link">
+        Arthas安装与使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arthas%E6%8F%92%E4%BB%B6/" class="md-nav__link">
+        Arthas实际开发中使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Elasticsearch%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" class="md-nav__link">
+        Elasticsearch 基本使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana%20%E4%BD%BF%E7%94%A8%20Elasticsearch%20%E4%BD%9C%E4%B8%BA%E6%95%B0%E6%8D%AE%E6%BA%90/" class="md-nav__link">
+        Grafana 使用 Elasticsearch 作为数据源
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../JAVA%E6%96%87%E4%BB%B6%E8%A7%A3%E5%8E%8B%E6%96%B9%E5%BC%8F%E6%95%88%E7%8E%87%E5%AF%B9%E6%AF%94/" class="md-nav__link">
+        JAVA文件解压方式效率对比
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kubernetes%E4%BD%BF%E7%94%A8Arthas/" class="md-nav__link">
+        Kubernetes使用Arthas
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MESI%E5%8D%8F%E8%AE%AE%E4%B8%8EMOESI%E5%8D%8F%E8%AE%AE/" class="md-nav__link">
+        MESI协议与MOESI协议
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nacos/" class="md-nav__link">
+        将Nacos加入到你的项目
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synchronized%E5%85%B3%E9%94%AE%E5%AD%97/" class="md-nav__link">
+        synchronized关键字
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#happens-before" class="md-nav__link">
+    指令重排与Happens-Before
+  </a>
+  
+    <nav class="md-nav" aria-label="指令重排与Happens-Before">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    编译器的优化
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    指令重排有以下规则
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#happens-before_1" class="md-nav__link">
+    Happens-Before规则
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cpu" class="md-nav__link">
+    cpu与操作系统
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>指令重排</h1>
+
+<h2 id="happens-before">指令重排与Happens-Before<a class="headerlink" href="#happens-before" title="Permanent link">&para;</a></h2>
+<h3 id="_1">编译器的优化<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>举个简单的例子，下面这段代码：</p>
+<pre><code>public class Test {
+
+    public static void main(String[] args) {
+        int leng = 0;
+        int wid = 0;
+        int length = 2;
+        int width = 3;
+        leng = length;
+        wid = width;
+        int area = leng * wid;
+        System.out.println(area);
+    }
+
+}
+</code></pre>
+<pre><code>javap -c Test.class
+</code></pre>
+<p>将代码代码编译出来查看指令集合</p>
+<pre><code> public static void main(java.lang.String[]);
+    Code:
+       0: iconst_2   //将int 2 入栈 
+       1: istore_3  //将int 2 存储到第三个变量中
+       2: iconst_3  //将int 3 入栈 
+       3: istore        4  //将int 3 存储到第四个变量中
+       5: iload_3    // 将第三个int 类型变量进栈 也就是 length=2
+       6: istore_1  // length=2 放入第一个变量中 leng=length
+       7: iload         4  //将int 3 存储到第四个变量中
+       9: istore_2   // wid=width;将第四个变量放入第2个变量中
+      10: iload_1  // 加载第一个变量
+      11: iload_2  // 加载第二个变量
+      12: imul   //两者相乘
+      13: istore        5
+      15: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      18: iload         5
+      20: invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
+      23: return
+}
+
+</code></pre>
+<p>发现java在编译的过程中会对相关代码的结构作出优化，编译顺序与结构，按照预期的结构应该指令集的前部分应该是</p>
+<pre><code>   0: iconst_0 //将int 0 入栈 
+   1: istore_1 //将int 0 存储到第1个变量中
+   2: iconst_0 //将int 0 入栈 
+   3: istore_2 //将int 0 存储到第2个变量中
+</code></pre>
+<p>但是实际生成的字节码集合却并不是很符合预期结果，原因是因为在编译过程中，回检查代码的上下文，对其结构进行调整，在代码8、9行中对变量进行了最终赋值，那么jvm将对编译结果进行优化。也就是说编译器会对代码进行重排序。</p>
+<h3 id="_2">指令重排有以下规则<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ol>
+<li>编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。</li>
+<li>指令级并行的重排序。现代处理器采用了指令级并行技术（Instruction-Level Parallelism， ILP）来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。</li>
+<li>内存系统的重排序。由于处理器使用缓存和读 / 写缓冲区，这使得加载和存储操作看上去可能是在乱序执行</li>
+</ol>
+<p>为了验证其猜想，对上述代码稍做调整，注释8、9行</p>
+<pre><code>public class Test {
+
+    public static void main(String[] args) {
+        int leng = 0;
+        int wid = 0;
+        int length = 2;
+        int width = 3;
+//        leng = length;
+//        wid = width;
+        int area = leng * wid;
+        System.out.println(area);
+    }
+
+}
+</code></pre>
+<pre><code>  public static void main(java.lang.String[]);
+    Code:
+       0: iconst_0 //将int 0 入栈 
+       1: istore_1 //将int 0 存储到第1个变量中
+       2: iconst_0 //将int 0 入栈 
+       3: istore_2 //将int 0 存储到第2个变量中
+       4: iconst_2
+       5: istore_3
+       6: iconst_3
+       7: istore        4
+       9: iload_1
+      10: iload_2
+      11: imul
+      12: istore        5
+      14: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      17: iload         5
+      19: invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
+      22: return
+}
+</code></pre>
+<p>所以得出结论，我们编写的程序都要经过编译器和处理器优化后才会被运行，优化分为很多种，其中有一种优化叫做重排序，重排序则为了保证优化前与优化后结果具有一致性，则需要遵循Happens-Before规则</p>
+<h3 id="happens-before_1">Happens-Before规则<a class="headerlink" href="#happens-before_1" title="Permanent link">&para;</a></h3>
+<p>具体具有以下规则</p>
+<ol>
+<li>程序顺序规则：在一个线程内，在程序前面的操作先行发生于后面的操作</li>
+<li>监视器锁规则：对一个锁的解锁，先行发生于随后对这个锁的加锁。</li>
+<li>volatile变量规则：对一个volatile域的写，先行发生于任意后续对这个volatile域的读。传递性：如果A happens-before B，且B happens-before C，那么A happens-before C</li>
+<li>start()规则：Thread 对象的 start() 方法调用先行发生于此线程的每一个动作。</li>
+<li>join()规则：如果线程A执行操作Thread B.join()并成功返回，那么线程B中的任意操作先行发生于线程A从ThreadB.join()操作成功返回。</li>
+<li>程序中断规则：对线程interrupted()方法的调用先行于被中断线程的代码检测到中断时间的发生。</li>
+<li>对象finalize规则：一个对象的初始化完成（构造函数执行结束）先行于发生它的finalize()方法的开始。</li>
+</ol>
+<p><strong>Happens-Before规则 必须要遵循as-if-serial 语义</strong></p>
+<p>不管怎么重排序，单线程程序的执行结果不能被改变。编译器、runtime和处理器都必须遵守as-if-serial语义。所以编译器和处理器不会对存在数据依赖关系的操作做重排序，因为这种重排序会改变执行结果。但是，如果操作之间不存在数据依赖关系，这些操作就可能被编译器和处理器重排序。</p>
+<pre><code>int leng,wid = 0;
+int length = 2; //为了方便说明将该操作称为 A
+int width = 3; //为了方便说明将该操作称为 B
+int area = leng * wid; //为了方便说明将该操作称为 C
+</code></pre>
+<p>如果 </p>
+<p>A happens-before B</p>
+<p>B happens-before C</p>
+<p>A happens-before C （传递性）</p>
+<p>如果根据happens-before进行指令重排序，无论 B-&gt;A-&gt;C还是A-&gt;B-&gt;C ,执行的结果并不会发生改变，因为只是改变了变量的赋值顺序，JMM 会允许这种重排序</p>
+<p>但是如果执行的顺序为C-&gt;A-&gt;B或者C-&gt;B-&gt;A时，这种重排序会改变执行结果，所以编译器和处理器会遵循 as-if-serial 语义不会对存在数据依赖关系的</p>
+<h3 id="cpu">cpu与操作系统<a class="headerlink" href="#cpu" title="Permanent link">&para;</a></h3>
+<p><img alt="" src="https://foruda.gitee.com/images/1685601623995098609/587d3822_5094274.png" /></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

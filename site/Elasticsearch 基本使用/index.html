@@ -1,0 +1,1293 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A blog about my favorite things">
+      
+      
+      
+      
+        <link rel="prev" href="../Arthas%E6%8F%92%E4%BB%B6/">
+      
+      
+        <link rel="next" href="../Grafana%20%E4%BD%BF%E7%94%A8%20Elasticsearch%20%E4%BD%9C%E4%B8%BA%E6%95%B0%E6%8D%AE%E6%BA%90/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>Elasticsearch 基本使用 - Tanzhuo Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#elasticsearch" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Tanzhuo Blog" class="md-header__button md-logo" aria-label="Tanzhuo Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tanzhuo Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Elasticsearch 基本使用
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Tanzhuo Blog" class="md-nav__button md-logo" aria-label="Tanzhuo Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Tanzhuo Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        关于我
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        Lua如何在Redis Run
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E8%BE%93%E5%87%BAchatgtp%E8%BF%94%E5%9B%9E%E5%86%85%E5%AE%B9/" class="md-nav__link">
+        如何利用streamlit构建属于你的ChatGTP
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mac%E5%AE%89%E8%A3%85GraphicsMagick/" class="md-nav__link">
+        GraphicsMagick使用教程
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%BA%BF%E4%B8%8AMySql/" class="md-nav__link">
+        如何利用线上MySql binlog排查问题
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Centos%E5%AE%89%E8%A3%85python3.8/" class="md-nav__link">
+        Centos安装python3.8运行环境
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CPU/" class="md-nav__link">
+        服务器CPU满载排查
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%86%85%E5%AD%98%E5%8F%AF%E8%A7%81%E6%80%A7/" class="md-nav__link">
+        内存可见性
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mybatis-Plus/" class="md-nav__link">
+        Mybatis-Plus
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E4%BD%BF%E7%94%A8minikube%E5%AE%89%E8%A3%85Kubernetes/" class="md-nav__link">
+        使用minikube安装Kubernetes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="md-nav__link">
+        指令重排
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arthas/" class="md-nav__link">
+        Arthas安装与使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arthas%E6%8F%92%E4%BB%B6/" class="md-nav__link">
+        Arthas实际开发中使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Elasticsearch 基本使用
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Elasticsearch 基本使用
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#elasticsearch-java-sdk" class="md-nav__link">
+    在项目中引入ElasticSearch JAVA SDK
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#elasticsearch-java-high-level-rest-client" class="md-nav__link">
+    配置ElasticSearch  Java High Level REST Client 操作对象
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resthighlevelclient" class="md-nav__link">
+    RestHighLevelClient 相关操作
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana%20%E4%BD%BF%E7%94%A8%20Elasticsearch%20%E4%BD%9C%E4%B8%BA%E6%95%B0%E6%8D%AE%E6%BA%90/" class="md-nav__link">
+        Grafana 使用 Elasticsearch 作为数据源
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../JAVA%E6%96%87%E4%BB%B6%E8%A7%A3%E5%8E%8B%E6%96%B9%E5%BC%8F%E6%95%88%E7%8E%87%E5%AF%B9%E6%AF%94/" class="md-nav__link">
+        JAVA文件解压方式效率对比
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kubernetes%E4%BD%BF%E7%94%A8Arthas/" class="md-nav__link">
+        Kubernetes使用Arthas
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MESI%E5%8D%8F%E8%AE%AE%E4%B8%8EMOESI%E5%8D%8F%E8%AE%AE/" class="md-nav__link">
+        MESI协议与MOESI协议
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nacos/" class="md-nav__link">
+        将Nacos加入到你的项目
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synchronized%E5%85%B3%E9%94%AE%E5%AD%97/" class="md-nav__link">
+        synchronized关键字
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#elasticsearch-java-sdk" class="md-nav__link">
+    在项目中引入ElasticSearch JAVA SDK
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#elasticsearch-java-high-level-rest-client" class="md-nav__link">
+    配置ElasticSearch  Java High Level REST Client 操作对象
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resthighlevelclient" class="md-nav__link">
+    RestHighLevelClient 相关操作
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="elasticsearch">Elasticsearch 基本使用<a class="headerlink" href="#elasticsearch" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Elasticsearch(简称ES)是一个基于Apache Lucene构建的开源、分布式、RESTful接口的全文搜索引擎，Elasticsearch通过对Lunece的封装，隐藏了复杂性，提供了使用简单的RESTful Api。Elasticsearch还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，因为对文档进行了分词处理。ES能够横向扩展至数以百计的服务器存储以及处理PB级的数据，可以在极短的时间内存储、搜索和分析大量的数据。Elasticsearch 是用 Java 开发的，并作为 Apache 许可条款下的开放源码发布，是当前流行的企业级搜索引擎。设计用于云计算中，能够达到实时搜索，稳定，可靠，快速，安装使用方便</p>
+</blockquote>
+<p><a href="https://www.elastic.co/cn/">Elasticsearch官网</a></p>
+<h3 id="elasticsearch-java-sdk">在项目中引入ElasticSearch JAVA SDK<a class="headerlink" href="#elasticsearch-java-sdk" title="Permanent link">&para;</a></h3>
+<p><strong>Maven</strong></p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;
+    &lt;artifactId&gt;elasticsearch-rest-high-level-client&lt;/artifactId&gt;
+    &lt;version&gt;7.6.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><strong>Gradle</strong></p>
+<pre><code>implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.6.2'
+</code></pre>
+<p><strong>yaml</strong></p>
+<pre><code>elasticsearch:
+  cluster-name: test-otc-cluster
+  cluster-nodes: 127.0.0.1
+  port: 9301
+  pool: 5
+</code></pre>
+<h3 id="elasticsearch-java-high-level-rest-client">配置ElasticSearch  Java High Level REST Client 操作对象<a class="headerlink" href="#elasticsearch-java-high-level-rest-client" title="Permanent link">&para;</a></h3>
+<p>初始化RestHighLevelClient 并交给容器管理</p>
+<pre><code>@Bean(name = &quot;restHighLevelClient&quot;)
+    public RestHighLevelClient restHighLevelClient() {
+        //可以传httpHost数组
+        String[] nodes = esNodes.split(&quot;,&quot;);
+        HttpHost[] httpHosts = new HttpHost[nodes.length];
+        for (int i = 0; i &lt; httpHosts.length; i++) {
+            httpHosts[i] = new HttpHost(nodes[i], ES_PORT, &quot;http&quot;);
+        }
+
+        RestClientBuilder builder = RestClient.builder(httpHosts);
+        // 异步httpclient的连接延时配置
+        builder.setRequestConfigCallback(requestConfigBuilder -&gt; {
+            //设置超时
+            requestConfigBuilder.setConnectTimeout(CONNECT_TIME_OUT);
+            requestConfigBuilder.setSocketTimeout(SOCKET_TIME_OUT);
+            return requestConfigBuilder.setConnectionRequestTimeout(CONNECTION_REQUEST_TIME_OUT);
+        });
+        // 异步httpclient的连接数配置
+        builder.setHttpClientConfigCallback(requestConfigBuilder -&gt; {
+            requestConfigBuilder.setMaxConnTotal(MAX_CONNECT_NUM);
+            return requestConfigBuilder.setMaxConnPerRoute(MAX_CONNECT_PER_ROUTE);
+        });
+
+        return new RestHighLevelClient(builder);
+    }
+</code></pre>
+<h3 id="resthighlevelclient">RestHighLevelClient 相关操作<a class="headerlink" href="#resthighlevelclient" title="Permanent link">&para;</a></h3>
+<p>基于7.6.2封装到工具类</p>
+<pre><code>public class EsClientUtils {
+    /**
+     * The official recommendation is 1000-5000
+     */
+    private static int batchSize = 1000;
+
+    private static String EsPreTags = &quot;&lt;span style='color:red' &gt;&quot;;
+
+    private static String EsPostTags = &quot;&lt;/span&gt;&quot;;
+
+    private static String baseScript = &quot;ctx._source['%s']=params.%s;&quot;;
+
+
+    public enum EsRangeEnums {
+        /**
+         * 开始值
+         */
+        START,
+        /**
+         * 结束值
+         */
+        END,
+
+        ;
+
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public enum AggregationEnums {
+        /**
+         * 聚合
+         */
+        MAX(&quot;max&quot;, new MaxAggregationBuilder(&quot;max&quot;)),
+
+        MIN(&quot;min&quot;, new MinAggregationBuilder(&quot;min&quot;)),
+
+        AVG(&quot;avg&quot;, new AvgAggregationBuilder(&quot;avg&quot;)),
+
+        SUM(&quot;sum&quot;, new SumAggregationBuilder(&quot;sum&quot;)),
+
+        COUNT(&quot;count&quot;, new ValueCountAggregationBuilder(&quot;count&quot;, ValueType.LONG)),
+        ;
+
+        private  String code;
+
+
+        private  ValuesSourceAggregationBuilder aggregationBuilder;
+    }
+
+
+    private static RestHighLevelClient restHighLevelClient;
+
+
+    @Autowired
+    public void init(RestHighLevelClient restHighLevelClient) {
+        EsClientUtils.restHighLevelClient = restHighLevelClient;
+    }
+
+
+    /**
+     * 判断索引是否存在
+     *
+     * @param index
+     * @return
+     */
+    public static boolean isIndexExist(String index) throws IOException {
+        return restHighLevelClient.indices().exists(new GetIndexRequest(index), RequestOptions.DEFAULT);
+    }
+
+
+    /**
+     * 创建索引
+     *
+     * @param index
+     * @return
+     */
+    public static boolean createIndex(String index) throws IOException {
+        if (isIndexExist(index)) {
+            CreateIndexRequest request = new CreateIndexRequest(index);
+            CreateIndexResponse createIndexResponse = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
+            return createIndexResponse.isAcknowledged();
+        }
+        log.info(&quot;The index already exists&quot;);
+        return false;
+    }
+
+
+    /**
+     * 删除索引
+     *
+     * @param index
+     * @return
+     */
+    public static boolean deleteIndex(String index) throws IOException {
+        if (!isIndexExist(index)) {
+            log.info(&quot;Index is not exits!&quot;);
+        }
+        return restHighLevelClient.indices().delete(new DeleteIndexRequest(index), RequestOptions.DEFAULT).isAcknowledged();
+    }
+
+    /**
+     * @param dataMap &lt;文档ID,数据源&gt;
+     * @param index   索引
+     * @throws IOException
+     */
+    public static void batchAddToElasticSearch(Map&lt;String, Object&gt; dataMap, String index) throws IOException {
+        //批量添加
+        BulkRequest bulkRequest = new BulkRequest();
+        int inc = 0;
+        for (Map.Entry&lt;String, Object&gt; data : dataMap.entrySet()) {
+            inc++;
+            Object value = data.getValue();
+            bulkRequest.add(new IndexRequest(index).id(data.getKey()).source(JSON.toJSONString(value), XContentType.JSON).opType(DocWriteRequest.OpType.INDEX));
+            if (inc &gt;= batchSize) {
+                inc = 0;
+                restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+            }
+        }
+        if (inc &gt;= dataMap.size() % batchSize) {
+            restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+        }
+    }
+
+    /**
+     * 数据添加，正定ID
+     *
+     * @param index 索引，类似数据库
+     * @param id    数据ID
+     * @return
+     */
+    public static String addData(String json, String index, String id) throws IOException {
+        log.info(&quot;Add data to cache|input:[{}]&quot;, json);
+        IndexResponse response = restHighLevelClient.index(new IndexRequest(index).id(id).source(json, XContentType.JSON), RequestOptions.DEFAULT);
+        log.info(&quot;Add data to cache|output:status:[{}],id:[{}]&quot;, response.status().getStatus(), response.getId());
+        return response.getId();
+    }
+
+
+    /**
+     * 通过ID删除数据
+     *
+     * @param index 索引，类似数据库
+     * @param id    数据ID
+     */
+    public static void deleteDataById(String index, String id) throws IOException {
+        DeleteResponse response = restHighLevelClient.delete(new DeleteRequest(index, id), RequestOptions.DEFAULT);
+        log.info(&quot;deleteDataById response status:{},id:{}&quot;, response.status().getStatus(), response.getId());
+    }
+
+    /**
+     * 根据条件删除索引
+     *
+     * @param params
+     * @param index
+     * @throws IOException
+     */
+    public static void deleteIndexByQuery(Map&lt;String, Object&gt; params, String... index) throws IOException {
+        DeleteByQueryRequest request = new DeleteByQueryRequest(index);
+        request.setConflicts(&quot;proceed&quot;);
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        exactFieldMatch(params, boolQueryBuilder);
+        request.setQuery(boolQueryBuilder);
+        restHighLevelClient.deleteByQuery(request, RequestOptions.DEFAULT);
+    }
+
+
+    /**
+     * 通过IDs批量删除数据
+     *
+     * @param index 索引，类似数据库
+     * @param ids   数据IDs
+     */
+    public static void batchDeleteData(String index, List&lt;String&gt; ids) throws IOException {
+        //批量删除
+        BulkRequest bulkRequest = new BulkRequest();
+        int inc = 0;
+        for (String id : ids) {
+            inc++;
+            bulkRequest.add(new DeleteRequest(index, id));
+            if (inc &gt;= batchSize) {
+                inc = 0;
+                restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+            }
+        }
+        if (inc &gt;= ids.size() % batchSize) {
+            restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+        }
+    }
+
+
+    /**
+     * 通过ID 更新数据
+     *
+     * @param jsonObject 要增加的数据
+     * @param index      索引，类似数据库
+     * @param id         数据ID
+     * @return
+     */
+    public static void updateDataById(String jsonObject, String index, String id) throws IOException {
+        UpdateRequest request = new UpdateRequest(index, id).doc(jsonObject, XContentType.JSON).docAsUpsert(true);
+        restHighLevelClient.update(request, RequestOptions.DEFAULT);
+    }
+
+    /**
+     * 批量更新数据
+     *
+     * @param map   数据map
+     * @param index 索引，类似数据库
+     */
+    public static void batchUpdateData(Map&lt;String, Object&gt; map, String index) throws IOException {
+        //批量添加
+        BulkRequest bulkRequest = new BulkRequest();
+        int inc = 0;
+        for (Map.Entry&lt;String, Object&gt; data : map.entrySet()) {
+            inc++;
+            bulkRequest.add(new UpdateRequest(index, data.getKey()).doc(JSON.toJSONString(data.getValue()), XContentType.JSON).docAsUpsert(true));
+            if (inc &gt;= batchSize) {
+                inc = 0;
+                restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+            }
+        }
+        if (inc &gt;= map.size() % batchSize) {
+            restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+        }
+    }
+
+
+    /**
+     * 根据条件更新索引
+     *
+     * @param index    索引
+     * @param painless painless脚本
+     * @param params   条件
+     * @param data     数据
+     * @throws IOException
+     */
+    public static void bulkUpdateByScript(String index, String painless, Map&lt;String, Object&gt; params, Map&lt;String, Object&gt; data) throws IOException {
+        UpdateByQueryRequest request = new UpdateByQueryRequest(index);
+
+        //设置版本忽略
+        request.setConflicts(&quot;proceed&quot;);
+
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        // 完全匹配过滤
+        exactFieldMatch(params, boolQueryBuilder);
+
+        request.setQuery(boolQueryBuilder);
+
+        request.setScript(new Script(ScriptType.INLINE, &quot;painless&quot;, painless, data));
+
+        BulkByScrollResponse bulkByScrollResponse = restHighLevelClient.updateByQuery(request, RequestOptions.DEFAULT);
+
+        //打印的内容 可以在 Elasticsearch head 和 Kibana  上执行查询
+        log.info(&quot;\n{}&quot;, request);
+        long total = bulkByScrollResponse.getTotal();
+        log.info(&quot;更新条数：[{}]|入参：[{}]&quot;, total, params);
+    }
+
+
+    /**
+     * 复制索引
+     *
+     * @param target 目标
+     * @param source 源
+     * @throws IOException
+     */
+    public static void copyIndex(String target, String... source) throws IOException {
+        ReindexRequest request = new ReindexRequest();
+        request.setSourceIndices(source);
+        request.setDestDocType(&quot;create&quot;);
+        request.setDestIndex(target);
+        restHighLevelClient.reindex(request, RequestOptions.DEFAULT);
+    }
+
+
+    /**
+     * 根据条件更新索引
+     *
+     * @param index  索引
+     * @param params 条件
+     * @param data   数据
+     * @throws IOException
+     */
+    public static void bulkUpdateByScript(String index, Map&lt;String, Object&gt; params, Map&lt;String, Object&gt; data) throws IOException {
+        EsClientUtils.bulkUpdateByScript(index, EsClientUtils.scriptBuilder(data), params, data);
+    }
+
+    public static String scriptBuilder(Map&lt;String, Object&gt; data) {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry&lt;String, Object&gt; entry : data.entrySet()) {
+            builder.append(String.format(EsClientUtils.baseScript, entry.getKey(), entry.getKey()));
+        }
+        String script = builder.toString();
+        log.info(&quot;\n script:[{}]&quot;, script);
+        return script;
+    }
+
+    /**
+     * 聚合查询（小数精度丢失）
+     *
+     * @param field            域
+     * @param aggregationEnums 类型
+     * @param params           条件
+     * @param index            索引
+     * @return
+     * @throws IOException
+     */
+    public static BigDecimal aggregationByQuery(String field, AggregationEnums aggregationEnums, Map&lt;String, Object&gt; params, String... index) throws IOException {
+        SearchRequest request = new SearchRequest(index);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
+                .size(0)
+                .aggregation(aggregationEnums.getAggregationBuilder().field(field));
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        exactFieldMatch(params, boolQueryBuilder);
+        searchSourceBuilder.query(boolQueryBuilder);
+        request.source(searchSourceBuilder);
+        //打印的内容 可以在 Kibana  上执行查询
+        log.info(&quot;\n{}&quot;, searchSourceBuilder);
+        SearchResponse search = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+        NumericMetricsAggregation.SingleValue maxTemperature = search.getAggregations().get(aggregationEnums.getCode());
+        return new BigDecimal(maxTemperature.value());
+    }
+
+    /**
+     * @param index          索引名称
+     * @param page           当前页（深度分页请考虑scroll）
+     * @param size           每页条数
+     * @param highlightField 高亮
+     * @param params         条件
+     * @param sorts          排序
+     * @param rangeParams    范围
+     * @param matchParams    全文检索
+     * @param isFuzzy        是否分词
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPage(String index,
+                                              int page,
+                                              int size,
+                                              String highlightField,
+                                              Map&lt;String, Object&gt; params,
+                                              Map&lt;String, SortOrder&gt; sorts,
+                                              Map&lt;String, Map&lt;EsRangeEnums, Object&gt;&gt; rangeParams,
+                                              Map&lt;String, Object&gt; matchParams,
+                                              boolean isFuzzy) throws IOException {
+
+        SearchRequest searchRequest = new SearchRequest(index);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        // 完全匹配过滤
+        exactFieldMatch(params, boolQueryBuilder);
+
+        //全文检索
+        fuzzyFieldSearch(matchParams, boolQueryBuilder, isFuzzy);
+
+        //排序
+        sortByField(sorts, searchSourceBuilder);
+
+        //高亮
+        setHighlightField(highlightField, searchSourceBuilder);
+
+        //范围查询
+        rangeByField(boolQueryBuilder, rangeParams);
+
+        page = Math.max(page, 0);
+        size = Math.max(size, 1);
+
+        searchSourceBuilder.query(boolQueryBuilder).from(page).size(size);
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+
+        //打印的内容 可以在 Kibana  上执行查询
+        log.info(&quot;\n{}&quot;, searchSourceBuilder);
+        return handleResponseOfData(searchResponse, page, size, highlightField);
+    }
+
+    private static void rangeByField(BoolQueryBuilder boolQueryBuilder, Map&lt;String, Map&lt;EsRangeEnums, Object&gt;&gt; rangeParams) {
+        for (Map.Entry&lt;String, Map&lt;EsRangeEnums, Object&gt;&gt; entry : rangeParams.entrySet()) {
+            boolQueryBuilder.must(QueryBuilders.rangeQuery(entry.getKey())
+                    .from(entry.getValue().get(EsRangeEnums.START))
+                    .to(entry.getValue().get(EsRangeEnums.END)));
+        }
+    }
+
+    private static void setHighlightField(String highlightField, SearchSourceBuilder searchSourceBuilder) {
+        if (StringUtils.isNotBlank(highlightField)) {
+            HighlightBuilder highlightBuilder = new HighlightBuilder();
+            highlightBuilder.preTags(EsClientUtils.EsPreTags);
+            highlightBuilder.postTags(EsClientUtils.EsPostTags);
+            highlightBuilder.field(highlightField);
+            searchSourceBuilder.highlighter(highlightBuilder);
+        }
+    }
+
+    private static void sortByField(Map&lt;String, SortOrder&gt; sorts, SearchSourceBuilder searchSourceBuilder) {
+        for (Map.Entry&lt;String, SortOrder&gt; entry : sorts.entrySet()) {
+            searchSourceBuilder.sort(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private static void fuzzyFieldSearch(Map&lt;String, Object&gt; matchParams, BoolQueryBuilder boolQueryBuilder, boolean isFuzzy) {
+        for (Map.Entry&lt;String, Object&gt; entry : matchParams.entrySet()) {
+            if (isFuzzy) {
+                boolQueryBuilder.should(QueryBuilders.matchQuery(entry.getKey(), entry.getValue()));
+            } else {
+                boolQueryBuilder.should(QueryBuilders.matchPhraseQuery(entry.getKey(), entry.getValue()));
+            }
+        }
+    }
+
+    private static void exactFieldMatch(Map&lt;String, Object&gt; params, BoolQueryBuilder boolQueryBuilder) {
+        for (Map.Entry&lt;String, Object&gt; entry : params.entrySet()) {
+            boolQueryBuilder.filter(QueryBuilders.termQuery(entry.getKey(), entry.getValue()));
+        }
+    }
+
+    private static EsPageResult handleResponseOfData(SearchResponse searchResponse, int page, int size, String highlightField) {
+        if (Objects.equals(RestStatus.OK, searchResponse.status())) {
+
+            JSONArray jsonArray = new JSONArray();
+
+            SearchHits hits = searchResponse.getHits();
+
+            long rowTotal = hits.getTotalHits().value;
+
+            long pageTotal = (rowTotal % size == 0) ? rowTotal / size : rowTotal / size + 1;
+
+            for (SearchHit hit : hits) {
+
+                if (StringUtils.isNotBlank(highlightField)) {
+
+                    Text[] text = hit.getHighlightFields().get(highlightField).getFragments();
+
+                    if (text != null) {
+                        for (Text str : text) {
+                            //遍历 高亮结果集，覆盖 正常结果集
+                            hit.getSourceAsMap().put(highlightField, str.string());
+                        }
+                    }
+                }
+                jsonArray.add(hit.getSourceAsMap());
+            }
+
+            return EsPageResult.builder().pages(pageTotal).current(page).total(rowTotal).pageSize(size).dataJson(jsonArray.toJSONString()).build();
+        }
+        return null;
+    }
+
+
+    /**
+     * @param index  索引名称
+     * @param params 条件
+     * @param page   当前页
+     * @param size   每页显示条数
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPage(String index, Map&lt;String, Object&gt; params, int page, int size) throws IOException {
+        return searchDataPage(index, page, size, StringUtils.EMPTY, params, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), false);
+    }
+
+
+    /**
+     * @param params 条件
+     * @param index  索引名称
+     * @param page   当前页
+     * @param size   每页显示条数
+     * @param sorts  排序
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPage(String index, Map&lt;String, Object&gt; params, int page, int size, Map&lt;String, SortOrder&gt; sorts) throws IOException {
+        return searchDataPage(index, page, size, StringUtils.EMPTY, Collections.emptyMap(), sorts, Collections.emptyMap(), Collections.emptyMap(), false);
+    }
+
+    /**
+     * @param params 条件
+     * @param index  索引名称
+     * @param page   当前页
+     * @param size   每页显示条数
+     * @param sorts  排序
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPage(String index,
+                                              int page,
+                                              int size, Map&lt;String, Object&gt; params,
+                                              Map&lt;String, Map&lt;EsRangeEnums, Object&gt;&gt; rangeParams,
+                                              Map&lt;String, SortOrder&gt; sorts) throws IOException {
+        return searchDataPage(index, page, size, StringUtils.EMPTY, params, sorts, rangeParams, Collections.emptyMap(), false);
+    }
+
+
+    /**
+     * 范围查询,并分页
+     *
+     * @param index       索引名称
+     * @param rangeParams 范围
+     * @param page        当前页
+     * @param size        每页显示条数
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPageByRange(String index, Map&lt;String, Map&lt;EsRangeEnums, Object&gt;&gt; rangeParams, int page, int size) throws IOException {
+        return searchDataPage(index, page, size, StringUtils.EMPTY, Collections.emptyMap(), Collections.emptyMap(), rangeParams, Collections.emptyMap(), false);
+    }
+
+    /**
+     * @param index       索引名称
+     * @param rangeParams 范围
+     * @param page        当前页
+     * @param size        每页显示条数
+     * @param sorts       排序
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPageByRange(String index, Map&lt;String, Map&lt;EsRangeEnums, Object&gt;&gt; rangeParams, int page, int size, Map&lt;String, SortOrder&gt; sorts) throws IOException {
+        return searchDataPage(index, page, size, StringUtils.EMPTY, Collections.emptyMap(), sorts, rangeParams, Collections.emptyMap(), false);
+    }
+
+    /**
+     * 条件范围查询,并分页
+     *
+     * @param index       索引名称
+     * @param params      条件
+     * @param rangeParams 范围
+     * @param page        当前页
+     * @param size        每页显示条数
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPageByRange(String index, Map&lt;String, Object&gt; params, Map&lt;String, Map&lt;EsRangeEnums, Object&gt;&gt; rangeParams, int page, int size) throws IOException {
+        return searchDataPage(index, page, size, StringUtils.EMPTY, params, Collections.emptyMap(), rangeParams, Collections.emptyMap(), false);
+    }
+
+
+    /**
+     * @param index       索引名称
+     * @param matchParams 全文检索条件
+     * @param page        当前页
+     * @param size        每页显示条数
+     * @param isFuzzy     是否分词
+     * @param sorts       排序
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPageByMatch(String index, Map&lt;String, Object&gt; matchParams, int page, int size, boolean isFuzzy, Map&lt;String, SortOrder&gt; sorts) throws IOException {
+        return searchDataPage(index, page, size, StringUtils.EMPTY, Collections.emptyMap(), sorts, Collections.emptyMap(), matchParams, isFuzzy);
+    }
+
+    /**
+     * @param index       索引名称
+     * @param matchParams 全文检索条件
+     * @param page        当前页
+     * @param size        每页显示条数
+     * @param isFuzzy     是否分词
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPageByMatch(String index, Map&lt;String, Object&gt; matchParams, int page, int size, boolean isFuzzy) throws IOException {
+        return searchDataPage(index, page, size, StringUtils.EMPTY, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), matchParams, isFuzzy);
+    }
+
+
+    /**
+     * @param index          索引名称
+     * @param matchParams    全文检索条件
+     * @param highlightField 高亮字段
+     * @param page           当前页
+     * @param size           每页显示条数
+     * @param isFuzzy        是否分词
+     * @return
+     * @throws IOException
+     */
+    public static EsPageResult searchDataPageByMatch(String index, Map&lt;String, Object&gt; matchParams, String highlightField, int page, int size, boolean isFuzzy) throws IOException {
+        return searchDataPage(index, page, size, highlightField, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), matchParams, isFuzzy);
+    }
+
+    /**
+     * 范围构建器
+     *
+     * @param rangeStart
+     * @param rangeEnd
+     * @return
+     */
+    public static Map&lt;EsRangeEnums, Object&gt; range(Object rangeStart, Object rangeEnd) {
+        HashMap&lt;EsRangeEnums, Object&gt; rangeMap = new HashMap&lt;&gt;(0x10);
+        rangeMap.put(EsRangeEnums.START, rangeStart);
+        rangeMap.put(EsRangeEnums.END, rangeEnd);
+        return rangeMap;
+    }
+
+    public static Map&lt;String, Map&lt;EsRangeEnums, Object&gt;&gt; rangeBuilder() {
+        return new HashMap&lt;&gt;(0x10);
+    }
+</code></pre>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

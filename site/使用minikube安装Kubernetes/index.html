@@ -1,0 +1,788 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A blog about my favorite things">
+      
+      
+      
+      
+        <link rel="prev" href="../Mybatis-Plus/">
+      
+      
+        <link rel="next" href="../%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>使用minikube安装Kubernetes - Tanzhuo Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#minikubekubernetes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Tanzhuo Blog" class="md-header__button md-logo" aria-label="Tanzhuo Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tanzhuo Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              使用minikube安装Kubernetes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Tanzhuo Blog" class="md-nav__button md-logo" aria-label="Tanzhuo Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Tanzhuo Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        关于我
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        Lua如何在Redis Run
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E8%BE%93%E5%87%BAchatgtp%E8%BF%94%E5%9B%9E%E5%86%85%E5%AE%B9/" class="md-nav__link">
+        如何利用streamlit构建属于你的ChatGTP
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mac%E5%AE%89%E8%A3%85GraphicsMagick/" class="md-nav__link">
+        GraphicsMagick使用教程
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%BA%BF%E4%B8%8AMySql/" class="md-nav__link">
+        如何利用线上MySql binlog排查问题
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Centos%E5%AE%89%E8%A3%85python3.8/" class="md-nav__link">
+        Centos安装python3.8运行环境
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CPU/" class="md-nav__link">
+        服务器CPU满载排查
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%86%85%E5%AD%98%E5%8F%AF%E8%A7%81%E6%80%A7/" class="md-nav__link">
+        内存可见性
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mybatis-Plus/" class="md-nav__link">
+        Mybatis-Plus
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          使用minikube安装Kubernetes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        使用minikube安装Kubernetes
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#brew" class="md-nav__link">
+    使用brew命令安装:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    查看安装路径
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minikube" class="md-nav__link">
+    启动 minikube
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minikube-log" class="md-nav__link">
+    删除minikube 重新启动并查看log输出
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    启动成功输出
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    打开浏览器
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    创建应用
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="md-nav__link">
+        指令重排
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arthas/" class="md-nav__link">
+        Arthas安装与使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arthas%E6%8F%92%E4%BB%B6/" class="md-nav__link">
+        Arthas实际开发中使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Elasticsearch%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" class="md-nav__link">
+        Elasticsearch 基本使用
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Grafana%20%E4%BD%BF%E7%94%A8%20Elasticsearch%20%E4%BD%9C%E4%B8%BA%E6%95%B0%E6%8D%AE%E6%BA%90/" class="md-nav__link">
+        Grafana 使用 Elasticsearch 作为数据源
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../JAVA%E6%96%87%E4%BB%B6%E8%A7%A3%E5%8E%8B%E6%96%B9%E5%BC%8F%E6%95%88%E7%8E%87%E5%AF%B9%E6%AF%94/" class="md-nav__link">
+        JAVA文件解压方式效率对比
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kubernetes%E4%BD%BF%E7%94%A8Arthas/" class="md-nav__link">
+        Kubernetes使用Arthas
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MESI%E5%8D%8F%E8%AE%AE%E4%B8%8EMOESI%E5%8D%8F%E8%AE%AE/" class="md-nav__link">
+        MESI协议与MOESI协议
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nacos/" class="md-nav__link">
+        将Nacos加入到你的项目
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synchronized%E5%85%B3%E9%94%AE%E5%AD%97/" class="md-nav__link">
+        synchronized关键字
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#brew" class="md-nav__link">
+    使用brew命令安装:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    查看安装路径
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minikube" class="md-nav__link">
+    启动 minikube
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minikube-log" class="md-nav__link">
+    删除minikube 重新启动并查看log输出
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    启动成功输出
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    打开浏览器
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    创建应用
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="minikubekubernetes">使用minikube安装Kubernetes<a class="headerlink" href="#minikubekubernetes" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>minikube 主要基于运行一个单节点 Kubernetes 集群，以便支持在本地机器上的 VM 内进行开发。它支持虚拟机驱动程序，如 VirtualBox、HyperV、KVM2。由于 Minikube 是 Kubernetes 体系中相对成熟的解决方案，支持的功能列表非常令人印象深刻。这些功能是负载均衡器、多集群、节点端口、持久卷、入口、仪表板或容器运行时。 </p>
+</blockquote>
+<h3 id="brew">使用brew命令安装:<a class="headerlink" href="#brew" title="Permanent link">&para;</a></h3>
+<pre><code>brew install minikube
+</code></pre>
+<h3 id="_1">查看安装路径<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<pre><code>which minikube
+</code></pre>
+<p><code>/opt/homebrew/bin/minikube</code></p>
+<h3 id="minikube">启动 minikube<a class="headerlink" href="#minikube" title="Permanent link">&para;</a></h3>
+<pre><code>dengqing@mayundeMacBook-Pro ~ % minikube start
+😄  Darwin 11.2 (arm64) 上的 minikube v1.26.1
+👎  Unable to pick a default driver. Here is what was considered, in preference order:
+💡  Alternatively you could install one of these drivers:
+    ▪ docker: Not installed: exec: &quot;docker&quot;: executable file not found in $PATH
+    ▪ hyperkit: Not installed: exec: &quot;hyperkit&quot;: executable file not found in $PATH
+    ▪ parallels: Not installed: exec: &quot;prlctl&quot;: executable file not found in $PATH
+    ▪ vmware: Not installed: exec: &quot;docker-machine-driver-vmware&quot;: executable file not found in $PATH
+    ▪ virtualbox: Not installed: unable to find VBoxManage in $PATH
+    ▪ podman: Not installed: exec: &quot;podman&quot;: executable file not found in $PATH
+    ▪ qemu2: Not installed: exec: &quot;qemu-system-aarch64&quot;: executable file not found in $PATH
+
+❌  Exiting due to DRV_NOT_DETECTED: No possible driver was detected. Try specifying --driver, or see https://minikube.sigs.k8s.io/docs/start/
+
+</code></pre>
+<p>原因是没有默认的驱动，安装docker 作为默认驱动</p>
+<pre><code>brew install --cask --appdir=/Applications docker
+</code></pre>
+<p>启动成功</p>
+<pre><code>hk@mayundeMacBook-Pro ~ % minikube start
+😄  Darwin 11.2 (arm64) 上的 minikube v1.26.1
+🎉  minikube 1.29.0 is available! Download it: https://github.com/kubernetes/minikube/releases/tag/v1.29.0
+💡  To disable this notice, run: 'minikube config set WantUpdateNotification false'
+
+✨  自动选择 docker 驱动
+📌  Using Docker Desktop driver with root privileges
+👍  Starting control plane node minikube in cluster minikube
+🚜  Pulling base image ...
+💾  Downloading Kubernetes v1.24.3 preload ...
+    &gt; preloaded-images-k8s-v18-v1...:  342.82 MiB / 342.82 MiB  100.00% 924.64 
+    &gt; gcr.io/k8s-minikube/kicbase:  348.00 MiB / 348.00 MiB  100.00% 511.18 KiB
+🔥  Creating docker container (CPUs=2, Memory=4000MB) ...
+🐳  正在 Docker 20.10.17 中准备 Kubernetes v1.24.3…
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use &quot;minikube&quot; cluster and &quot;default&quot; namespace by default 
+</code></pre>
+<p>打开Kubernetes控制台 ，出现以下错误</p>
+<pre><code>minikube dashboard
+🔌  正在开启 dashboard ...
+▪ Using image kubernetesui/dashboard:v2.6.0
+▪ Using image kubernetesui/metrics-scraper:v1.0.8
+🤔  正在验证 dashboard 运行情况 ...
+🚀  Launching proxy ...
+🤔  正在验证 proxy 运行状况 ...
+
+❌  Exiting due to SVC_URL_TIMEOUT: http://127.0.0.1:5077/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ is not accessible: checkURL: Get &quot;http://127.0.0.1:5077/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/&quot;: dial tcp 127.0.0.1:5077: connect: connection refused
+</code></pre>
+<h3 id="minikube-log">删除minikube 重新启动并查看log输出<a class="headerlink" href="#minikube-log" title="Permanent link">&para;</a></h3>
+<pre><code>minikube delete
+minikube start
+minikube dashboard --alsologtostderr -v=
+</code></pre>
+<h3 id="_2">启动成功输出<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<pre><code class="language-java">W0317 15:39:06.172493   56978 out.go:239] 🤔  正在验证 proxy 运行状况 ...
+🤔  正在验证 proxy 运行状况 ...
+I0317 15:39:06.188821   56978 dashboard.go:212] http://127.0.0.1:58992/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ response: &lt;nil&gt; &amp;{Status:200 OK StatusCode:200 Proto:HTTP/1.1 ProtoMajor:1 ProtoMinor:1 Header:map[Accept-Ranges:[bytes] Audit-Id:[fe8d4733-509f-4140-b066-240ca91d76ef] Cache-Control:[no-cache, private no-cache, no-store, must-revalidate] Content-Type:[text/html; charset=utf-8] Date:[Fri, 17 Mar 2023 07:39:06 GMT] Last-Modified:[Tue, 31 May 2022 15:30:52 GMT]] Body:0x14000a5eae0 ContentLength:-1 TransferEncoding:[] Close:false Uncompressed:true Trailer:map[] Request:0x14000fa2c00 TLS:&lt;nil&gt;}
+I0317 15:39:06.206370   56978 out.go:177] 🎉  Opening http://127.0.0.1:58992/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+🎉  Opening http://127.0.0.1:58992/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+I0317 15:39:06.415533   56978 dashboard.go:127] Success! I will now quietly sit around until kubectl proxy exits!
+</code></pre>
+<h3 id="_3">打开浏览器<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p><a href="http://127.0.0.1:58992/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/workloads?namespace=default">http://127.0.0.1:58992/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/workloads?namespace=default</a></p>
+<p><img alt="" src="https://foruda.gitee.com/images/1685601364205677648/67a91b05_5094274.png" /></p>
+<h3 id="_4">创建应用<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>在容器中尝试创建一个nginx</p>
+<pre><code>kubectl create deployment test-nginx --image=nginx:1.23.0
+</code></pre>
+<p>暴露80端口</p>
+<pre><code>kubectl expose deployment test-nginx --port=80  --type=NodePor
+</code></pre>
+<p>可以把 Node 主机端口 转发 到 pod 端口</p>
+<pre><code>kubectl port-forward  --address 0.0.0.0   service/test-nginx 80:80
+</code></pre>
+<p>访问niginx  <code>http://localhost/</code>
+<img alt="" src="https://foruda.gitee.com/images/1685601411125204474/2c1bd079_5094274.png" /></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>
