@@ -11,17 +11,15 @@
       
       
       
-        <link rel="prev" href="../MESI%E5%8D%8F%E8%AE%AE%E4%B8%8EMOESI%E5%8D%8F%E8%AE%AE/">
+        <link rel="prev" href="../synchronized%E5%85%B3%E9%94%AE%E5%AD%97/">
       
-      
-        <link rel="next" href="../synchronized%E5%85%B3%E9%94%AE%E5%AD%97/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
     
     
       
-        <title>将Nacos加入到你的项目 - Tanzhuo Blog</title>
+        <title>使用 JProfiler 进行线上问题分析 - Tanzhuo Blog</title>
       
     
     
@@ -63,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#nacos" class="md-skip">
+        <a href="#jprofiler" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              将Nacos加入到你的项目
+              使用 JProfiler 进行线上问题分析
             
           </span>
         </div>
@@ -452,66 +450,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          将Nacos加入到你的项目
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../nacos/" class="md-nav__link">
         将Nacos加入到你的项目
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    如何安装
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nacos_1" class="md-nav__link">
-    启动Nacos
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#springboot" class="md-nav__link">
-    集成Springboot
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -537,11 +480,82 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../%E4%BD%BF%E7%94%A8%20JProfiler%20%E8%BF%9B%E8%A1%8C%E7%BA%BF%E4%B8%8A%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          使用 JProfiler 进行线上问题分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         使用 JProfiler 进行线上问题分析
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#jprofiler" class="md-nav__link">
+    使用 JProfiler 进行线上问题分析
+  </a>
+  
+    <nav class="md-nav" aria-label="使用 JProfiler 进行线上问题分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    一、环境准备
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    二、实时连接运行的 Java 应用
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hprof" class="md-nav__link">
+    三、导出 .hprof 内存快照
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hprof_1" class="md-nav__link">
+    四、离线 .hprof 快照分析
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -563,8 +577,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -573,23 +585,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#jprofiler" class="md-nav__link">
+    使用 JProfiler 进行线上问题分析
+  </a>
+  
+    <nav class="md-nav" aria-label="使用 JProfiler 进行线上问题分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
-    如何安装
+    一、环境准备
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#nacos_1" class="md-nav__link">
-    启动Nacos
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    二、实时连接运行的 Java 应用
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#springboot" class="md-nav__link">
-    集成Springboot
+        
+          <li class="md-nav__item">
+  <a href="#hprof" class="md-nav__link">
+    三、导出 .hprof 内存快照
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hprof_1" class="md-nav__link">
+    四、离线 .hprof 快照分析
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -608,78 +640,112 @@
                   
 
 
-<h1 id="nacos">Nacos<a class="headerlink" href="#nacos" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Nacos 是一个基于云原生的动态服务发现、配置和管理平台，它可以帮助开发者更好地实现微服务架构中的动态服务发现和配置管理。</p>
-</blockquote>
-<h3 id="_1">如何安装<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
-<p><a href="https://nacos.io/zh-cn/docs/quick-start.html">官方文档</a></p>
-<p><strong>下载安装包</strong></p>
-<p>通过 <a href="https://github.com/alibaba/nacos/releases">Github</a> 选择你要下载 的压缩包，最好下载最新版本</p>
-<p><strong>初始化数据</strong></p>
-<p>创建数据库</p>
-<pre><code>CREATE DATABASE nacos_config DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-</code></pre>
-<p>执行 Nacos 服务端包中的 SQL 脚本来初始化数据库，脚本文件位于路径 nacos/conf/nacos-mysql.sql。</p>
-<blockquote>
-<p>${NACOS_HOME}：Nacos Server 所在的目录</p>
-</blockquote>
-<pre><code>mysql -uroot -p nacos_config &lt; ${NACOS_HOME}/conf/mysql-schema.sql
-</code></pre>
-<p>修改 application.properties，放开对应mysql注释填写自己mysql地址</p>
-<pre><code>db.num=1
-db.url.0=jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=UTC
-db.user=root
-db.password.0=1234
-</code></pre>
-<h3 id="nacos_1">启动Nacos<a class="headerlink" href="#nacos_1" title="Permanent link">&para;</a></h3>
-<p>进入Nacos的 bin 目录下，使用以下命令启动 Nacos</p>
-<pre><code>sh startup.sh -m standalone
-</code></pre>
-<h2 id="springboot">集成Springboot<a class="headerlink" href="#springboot" title="Permanent link">&para;</a></h2>
-<p>添加maven依赖</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;/artifactId&gt;
-    &lt;version&gt;2021.1&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p>在 <code>application.yml</code>文件中添加Nacos的地址与namespac空间命名的名称</p>
-<pre><code>nacos:
-  config:
-    bootstrap:
-      #开启系统启动时预读取nacos的配置，用于满足@Value注入数据的场景
-      enable: true
-    # 配置所属命名空间的id,此处我们配置名称为dev的id，可以在命名空间列表查看id的值
-    namespace: demo-namespace
-    # 配置所属分组
-    group: DEFAULT_GROUP
-    # 配置ID
-    data-id: demo
-    # 配置文件类型,对应nacos配置页面的配置格式，默认是properties
-    type: yaml
-    # nacos服务器地址
-    server-addr: 127.0.0.1:8848
-    # 开启自动刷新nacos配置
-    auto-refresh: true
-    # 针对配置项同名的情况，是否允许nacos的配置覆盖本地的配置
-    remote-first: true
-  discovery:
-    server-addr:127.0.0.1:8848
+  <h1>使用 JProfiler 进行线上问题分析</h1>
 
-</code></pre>
-<p>应用程序的启动类中添加 <code>@EnableDiscoveryClient</code>注解</p>
-<pre><code>@SpringBootApplication
-@EnableDiscoveryClient
-public class MinioDemoApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(MinioDemoApplication.class, args);
-    }
-
-}
-
-</code></pre>
+<h2 id="jprofiler">使用 JProfiler 进行线上问题分析<a class="headerlink" href="#jprofiler" title="Permanent link">&para;</a></h2>
+<p>记录JProfiler 的实时连接（Live Profiling）和离线内存快照分析两大流程，帮助后续开发高效定位性能瓶颈与内存泄漏。
+JProfiler的监控模式主要有以下两种：</p>
+<ul>
+<li><strong>Sampling（采样）</strong>：性能开销小，可快速查看 CPU/内存热点，但不记录方法调用次数等详细信息。适合日常性能巡检。</li>
+<li><strong>Instrumentation（埋点）</strong>：记录完整执行信息，包括方法调用次数，但会显著增加运行开销。仅在需深入剖析时启用，切换模式需重启 JProfiler。</li>
+</ul>
+<p>常规使用选择sampling模式即可,我选择的也是Sampling</p>
+<hr />
+<h3 id="_1">一、环境准备<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>JProfiler 版本</strong>
+   本地客户端版本应与服务器端一致，避免协议或功能不兼容。</p>
+</li>
+<li>
+<p><strong>激活</strong></p>
+<p>用户名：<code>inkerbot</code></p>
+<p>激活码: <code>inkerbot#568545139-27vxgmny6224a#5bbb5</code></p>
+</li>
+</ol>
+<hr />
+<h3 id="java">二、实时连接运行的 Java 应用<a class="headerlink" href="#java" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>查找目标进程</strong></li>
+</ol>
+<p><code>bash
+   sudo ps -ef | grep "tomcat"</code></p>
+<ol>
+<li><strong>启动 jpenable</strong></li>
+</ol>
+<p><code>bash
+   cd ${JPROFILER_HOME}/bin
+   sudo ./jpenable</code></p>
+<ol>
+<li><strong>选择进程序号</strong></li>
+</ol>
+<p>在命令行界面中，输入对应进程前的序号，回车确认。</p>
+<ol>
+<li><strong>选择监控模式</strong> </li>
+</ol>
+<p>默认 GUI 模式；可根据提示切换 Sampling 或 Instrumentation。</p>
+<ol>
+<li><strong>输入通信端口</strong> </li>
+</ol>
+<p>确保端口（默认 8849）未被占用：</p>
+<p><code>bash
+   sudo netstat -lnpt | grep 8849</code></p>
+<ol>
+<li><strong>连接成功示例</strong>
+<img alt="" src="https://cdn.nlark.com/yuque/0/2023/png/22527471/1695643106693-8bdea677-0b39-4ed8-8a71-a08cbebe69d0.png" /></li>
+</ol>
+<p>打开本地 JProfiler 客户端，选择 Attach to Remote JVM，输入服务器 IP 与端口，即可建立实时连接</p>
+<p>连接成功后，在 JProfiler GUI 中即可实时查看 CPU、内存、线程、方法调用等各类性能数据。</p>
+<p>找到耗时最长调用最多的redis通信连接
+<img alt="" src="https://cdn.nlark.com/yuque/0/2023/png/22527471/1701243004803-1686fc22-ccac-4614-a0da-e7a4a783be85.png" />
+将本次排查出来的问题优化后，服务器的相应时间得到明显的缩短
+<img alt="" src="https://cdn.nlark.com/yuque/0/2023/png/22527471/1701243276474-3ba7ece0-e45a-4c3c-a928-39715309ad0c.png" /></p>
+<hr />
+<h3 id="hprof">三、导出 <code>.hprof</code> 内存快照<a class="headerlink" href="#hprof" title="Permanent link">&para;</a></h3>
+<ol>
+<li>在 JProfiler 界面顶部，选择 <strong>Session → Save Snapshot...</strong>。</li>
+<li>选择快照类型为 <strong>Heap Dump (.hprof)</strong>，指定文件路径并保存。</li>
+</ol>
+<hr />
+<h3 id="hprof_1">四、离线 <code>.hprof</code> 快照分析<a class="headerlink" href="#hprof_1" title="Permanent link">&para;</a></h3>
+<p>以下步骤适用于已生成 <code>.hprof</code> 文件的场景。</p>
+<ol>
+<li>
+<p><strong>打开快照</strong></p>
+</li>
+<li>
+<p>启动 JProfiler，选择 <code>Session → Open Snapshot</code>，加载内存快照文件。</p>
+</li>
+<li>
+<p><strong>定位内存占用较大的对象</strong></p>
+</li>
+</ol>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2023/png/22527471/1701242197057-6eaf9b13-c27a-496c-a115-0e0f61fa83a8.png" /></p>
+<ol>
+<li>
+<p><strong>隔离感兴趣的对象</strong></p>
+</li>
+<li>
+<p>在目标对象行上 <strong>右键 → List Objects → Use Selected Objects</strong>，将其单独列出便于深入查阅。
+<img alt="" src="https://cdn.nlark.com/yuque/0/2023/png/22527471/1701242357805-d9475ad8-06ad-40d3-a786-79b4754c1758.png" /></p>
+</li>
+<li>
+<p><strong>查看对象的引用链</strong></p>
+</li>
+<li>
+<p>切换到 <strong>Incoming References</strong> 视图，展示从 GC Roots 到该实例的引用路径。</p>
+</li>
+<li>双击引用链条可直接跳转到对应方法或类的代码位置。</li>
+</ol>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2023/png/22527471/1701242396442-cf827920-69ab-4b6b-9912-3fec8c91ee70.png" /></p>
+<p>5.<strong>定位与优化触发代码</strong></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2023/png/22527471/1701242424895-842971fa-c149-4c50-9a4b-e107d2aa5327.png" /></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2023/png/22527471/1701242460273-61ed4e2f-e91f-457d-a893-37059a0d9b8a.png" /></p>
+<p>排查发现 <code>selectByParms()</code>方法中频繁创建了大的对象
+   - 根据引用链查找根源代码位置，一般都是：
+     - 长生命周期集合或缓存未及时清理
+     - 注册后未注销的监听器/回调
+     - 循环中频繁创建的大对象</p>
 
 
 
