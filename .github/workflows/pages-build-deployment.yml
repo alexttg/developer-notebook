@@ -1,6 +1,11 @@
 # .github/workflows/pages-build-deployment.yml
 name: pages build and deployment
 
+permissions:
+  contents: write     # 允许推送分支的文件改动
+  pages: write        # 允许更新 Pages 部署
+  id-token: write     # 如果你后面还要用 OIDC
+
 # 监听 push 到 main 分支
 on:
   push:
