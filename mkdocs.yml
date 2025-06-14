@@ -21,6 +21,7 @@ nav:
     - MESI协议与MOESI协议 : MESI协议与MOESI协议.md 
     - 将Nacos加入到你的项目: nacos.md
     - synchronized关键字: synchronized关键字.md
+    - 使用JProfiler进行线上问题分析: 使用JProfiler进行线上问题分析.md
 markdown_extensions:
   - toc:
       permalink: true
