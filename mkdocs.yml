@@ -22,6 +22,8 @@ nav:
     - 将Nacos加入到你的项目: nacos.md
     - synchronized关键字: synchronized关键字.md
     - 使用JProfiler进行线上问题分析: 使用JProfiler进行线上问题分析.md
+    - 使用mitmproxy抓包安卓配置: 使用mitmproxy抓包安卓配置.md
+
 markdown_extensions:
   - toc:
       permalink: true
