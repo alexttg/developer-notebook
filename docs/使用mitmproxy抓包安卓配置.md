@@ -109,10 +109,7 @@ openssl x509 -inform DER -in charles.crt -out charles.pem
 获取旧版哈希值（Android 仍多用 subject_hash_old）： 
 
 ```plain
-bash
 
-
-CopyEdit
 openssl x509 -subject_hash_old -in charles.pem | head -1
 ```
 
