@@ -928,10 +928,7 @@ EOF
 <pre><code class="language-plain">openssl x509 -inform DER -in charles.crt -out charles.pem
 </code></pre>
 <p>获取旧版哈希值（Android 仍多用 subject_hash_old）： </p>
-<pre><code class="language-plain">bash
-
-
-CopyEdit
+<pre><code class="language-plain">
 openssl x509 -subject_hash_old -in charles.pem | head -1
 </code></pre>
 <p>假设结果是 <code>abcdef12</code>；</p>
